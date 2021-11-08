@@ -1,24 +1,23 @@
 const ctrlHome = {};
-const Usuario = require('../models/user');
+const Usuario = require('../models/users');
 
 
-
-
-//ruta get users 
+//ruta mostrar usuarios 
  
 ctrlHome.rutaGet = async (req,res)=>{
 
-    const usuario = await Usuario.find();
+    const usuario = await Usuario.findById();
 
     res.json(usuario);
 }
 
 //ruta agregar users
 
+
+
 ctrlHome.rutaPost = async (req,res)=>{
      
-    const {email, password} = req.body;
-
+    const {email,password,} = req.body;
     const usuario = new Usuario({email,password})
 
     await usuario.save();
@@ -44,15 +43,10 @@ ctrlHome.rutaDelete = async (req,res)=>{
 ctrlHome.rutaPut = async (req , res)=>{
 
     const { id } = req.params;
-    let {email, password}= req.body
 
-
-    /*if(password){
-
-    } */
 
     try {
-        const usuario = await Usuario.findByIdAndUpdate(id, {email, password});
+        const usuario = await Usuario.findByIdAndUpdate(id, {dni, password});
         return res.json(usuario)
     } catch (error) {
         console.log(`Error to update user: ${error}`)

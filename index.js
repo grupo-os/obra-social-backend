@@ -15,7 +15,7 @@ app.set("port", process.env.PORT || 5000);
 
 //rutas 
 app.use(require('./routes/user.routes'));
-
+app.use(require('./routes/solicitudes.routes'))
 //devuelve la conexion
 app.listen(app.get("port"),()=>
     console.log(`server on port ${app.get("port")}`)
