@@ -69,9 +69,9 @@ ctrlSolicitudes.rutaAceptarAfiliado= async (req,res)=>{
             await user.save()
             
             //envia correo con sus email y password
-            await enviarCorreo(email,password)
             
-            
+            //await enviarCorreo(email,password)
+
             
             
             return (    
@@ -106,9 +106,13 @@ ctrlSolicitudes.rutaAceptarPrestador = async (req,res)=>{
             //crea usuario automaticamente con el correo y la contrasena generada automaticamente
             let user = new Usuario({email,password, role:'prestador',tipoRole:'user'});
             
-            await user.save().enviarCorreo(email,password)
-
+            await user.save()
+            
+            
             //envia correo con sus email y password
+            
+            //enviarCorreo(email,password)
+            
             
             //crea prestador con los datos ingresados
             
