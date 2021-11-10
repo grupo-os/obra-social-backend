@@ -21,6 +21,9 @@ const SolicitudPrestadoShema = new Schema({
     direccion:{
         type: String,
         require:true
+        //lugar de atencion
+         //fecha nacimiento
+        //sexo
             
     },
     profecion:{

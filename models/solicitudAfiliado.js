@@ -29,6 +29,8 @@ const SolicitudAfiliadoShema = new Schema({
         require: true,
     }
     
+    //fecha nacimiento
+    //sexo
     
 });
 
