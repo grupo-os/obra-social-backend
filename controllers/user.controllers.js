@@ -1,21 +1,43 @@
-const ctrlHome = {};
+const ctrlUsuarios = {};
 const Usuario = require('../models/users');
 
 
 //ruta mostrar usuarios 
- 
-ctrlHome.rutaGet = async (req,res)=>{
+ctrlUsuarios.rutaLogin = async (req,res)=>{
 
-    const usuario = await Usuario.findById();
+    const {email, password}= req.body;
+    const user =findOne({email, password})
+    
 
-    res.json(usuario);
+    if(!user){
+        return res.status(401).json({
+            mensaje:"No existe:",
+            email: email
+        })
+    }
+    if(!user.activo){
+        return res.status(401).json({
+            mensaje:"No existe:",
+            email: email
+        })
+    }
+}
+
+
+
+//ver usuarios
+ctrlUsuarios.rutaGet = async (req,res)=>{
+
+    const user = await Usuario.findById();
+
+    res.json(user);
 }
 
 //ruta agregar users
 
 
 
-ctrlHome.rutaPost = async (req,res)=>{
+ctrlUsuarios.rutaPost = async (req,res)=>{
      
     const {email,password,} = req.body;
     const usuario = new Usuario({email,password})
@@ -25,7 +47,7 @@ ctrlHome.rutaPost = async (req,res)=>{
 };
 
 //ruta eliminar users
-ctrlHome.rutaDelete = async (req,res)=>{
+ctrlUsuarios.rutaDelete = async (req,res)=>{
     const {id}= req.body;
 
     try{
@@ -40,7 +62,7 @@ ctrlHome.rutaDelete = async (req,res)=>{
 
 
 //ruta editar users
-ctrlHome.rutaPut = async (req , res)=>{
+ctrlUsuarios.rutaPut = async (req , res)=>{
 
     const { id } = req.params;
 
@@ -55,4 +77,4 @@ ctrlHome.rutaPut = async (req , res)=>{
 };
 
 
-module.exports = ctrlHome;
+module.exports = ctrlUsuarios;

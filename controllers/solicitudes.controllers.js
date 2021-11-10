@@ -4,7 +4,7 @@ const SolicitudPrestador= require('../models/solicitudPrestador');
 const Personas = require('../models/personas');
 const Usuario = require('../models/users');
 const {createPassword} = require('../helpers/generatepassword');
-
+const {enviarCorreo} = require('../helpers/datosEvCorreo') 
 
 //RUTAS GET:
 //get afiliados
@@ -57,7 +57,6 @@ ctrlSolicitudes.rutaAceptarAfiliado= async (req,res)=>{
 
     const {nombre, email, dni, celular, direccion}= solicitudAceptada
             //Si es aceptado se crea una persona con la informacion
-
             const persona = new Personas({nombre,email,dni,celular,direccion})
             await persona.save() 
 
@@ -66,14 +65,21 @@ ctrlSolicitudes.rutaAceptarAfiliado= async (req,res)=>{
             const password = createPassword(); //funcion para crear password
 
             let user = new Usuario({email,password, role:'afiliado',tipoRole:'user'});
+           
+            await user.save()
             
-            await user.save() 
+            //envia correo con sus email y password
+            await enviarCorreo(email,password)
             
-
-            return res.status(201).json({
+            
+            
+            
+            return (    
+            res.status(201).json({
+                
                 personaCreada:persona,
                 usuario:user
-            })
+            }))
 
 }
 
@@ -100,7 +106,10 @@ ctrlSolicitudes.rutaAceptarPrestador = async (req,res)=>{
             //crea usuario automaticamente con el correo y la contrasena generada automaticamente
             let user = new Usuario({email,password, role:'prestador',tipoRole:'user'});
             
-            await user.save()
+            await user.save().enviarCorreo(email,password)
+
+            //envia correo con sus email y password
+            
             //crea prestador con los datos ingresados
             
 

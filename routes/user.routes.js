@@ -2,12 +2,20 @@ const router =require('express').Router();
 
 
 const{
-    rutaPost/*,rutaLogin*/,rutaDelete,rutaGet, rutaPut/*, rutaLogicalDelete*/
+    rutaPost,rutaLogin,rutaDelete,rutaGet, rutaPut/*, rutaLogicalDelete*/
 }=  require('../controllers/user.controllers')
 
 
+
+
+
+//Ruta Login
+router.post('/login/usuarios', rutaLogin)
+
+
+
 //crear nuevo usuario
-router.get('/api/get-user',rutaGet)
+router.get('/usuarios/get-user',rutaGet)
 
 //ruta agregar usuarios
 router.post('/api/create-user',rutaPost)
