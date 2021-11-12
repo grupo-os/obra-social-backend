@@ -22,7 +22,7 @@ const enviarCorreo = async (email,password)=> {
   await transporter.sendMail({
     from: `"Obra Social Agil" <${process.env.MYGMAIL}>`, // sender address
     to: `${email}`, // list of receivers
-    subject: "Cuenta de de Obra Social aceptada", // Subject line
+    subject: "Cuenta de Obra Social aceptada", // Subject line
     html: `${contentHTML}`
     
     

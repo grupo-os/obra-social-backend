@@ -3,9 +3,9 @@ const SolicitudAfiliado = require('../models/solicitudAfiliado');
 const SolicitudPrestador= require('../models/solicitudPrestador');
 const Personas = require('../models/personas');
 const Usuario = require('../models/users');
+var bcryptjs = require('bcryptjs');
 const {createPassword} = require('../helpers/generatepassword');
 const {enviarCorreo} = require('../helpers/datosEvCorreo') 
-
 //RUTAS GET:
 //get afiliados
 ctrlSolicitudes.rutaGetAfiliado = async (req,res)=>{
@@ -64,7 +64,11 @@ ctrlSolicitudes.rutaAceptarAfiliado= async (req,res)=>{
 
             const password = createPassword(); //funcion para crear password
 
-            let user = new Usuario({email,password, role:'afiliado',tipoRole:'user'});
+            const salt = bcryptjs.genSaltSync();
+            
+            const passwordHash = bcryptjs.hashSync(password, salt)
+
+            let user = new Usuario({email,passwordHash, role:'afiliado',tipoRole:'user'});
            
             await user.save()
             
