@@ -1,6 +1,6 @@
 const ctrlProductos = {};
 const Productos = require('../models/productos');
-
+const {aplicar_descuento}= require('../helpers/aplicar_descuentos');
 
 
 ctrlProductos.rutaGetProductos = async(req,res)=>{
@@ -14,7 +14,10 @@ ctrlProductos.rutaGetProductos = async(req,res)=>{
 ctrlProductos.rutaPostProducto=async (req,res)=>{
 
     const {farmacia,nombre_producto,descripcion,img,precio,descuento, stock}= await req.body
-    const producto = new Productos({farmacia,nombre_producto,descripcion,img,precio,descuento, stock})
+
+    let precioCnDescuento = aplicar_descuento(descuento,precio);
+
+    const producto = new Productos({farmacia,nombre_producto,descripcion,img,precio,descuento,precioCnDescuento, stock})
 
     await producto.save();
     res.json({msg: 'Producto agregado'})
@@ -47,11 +50,13 @@ ctrlProductos.rutaSubirStock=async (req,res)=>{
 
 }
 
+
+//venta producto
 ctrlProductos.rutaVentaProducto = async(req,res)=>{
 
     const {id}=req.params;
     const {ventaProducto}=req.body;
-    const producto = await Productos.findByIdAndUpdate(id,{$inc:{"stock":-ventaProducto, contadorVendidos:+ventaProducto}});
+    const producto = await Productos.findByIdAndUpdate(id,{$inc:{"stock":-ventaProducto}});
     return res.status(201).json({
         venta:`${ventaProducto}`,
         totalVendidos: ` ${producto.contadorVendidos+ventaProducto}`,

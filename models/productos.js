@@ -32,7 +32,7 @@ const ProductosShema = new Schema({
         type: Number,
         require:true
     },
-    contadorVendidos:{
+    precioCnDescuento:{
         type:Number,
         default:0,
         require:true
