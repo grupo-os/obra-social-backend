@@ -3,7 +3,7 @@ const SolicitudAfiliado = require('../models/solicitudAfiliado');
 const SolicitudPrestador= require('../models/solicitudPrestador');
 const Personas = require('../models/personas');
 const Usuario = require('../models/users');
-var bcryptjs = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 const {createPassword} = require('../helpers/generatepassword');
 const {enviarCorreo} = require('../helpers/datosEvCorreo') 
 //RUTAS GET:
@@ -74,7 +74,7 @@ ctrlSolicitudes.rutaAceptarAfiliado= async (req,res)=>{
             
             //envia correo con sus email y password
             
-            //await enviarCorreo(email,password)
+            await enviarCorreo(email,password)
 
             
             
@@ -115,7 +115,7 @@ ctrlSolicitudes.rutaAceptarPrestador = async (req,res)=>{
             
             //envia correo con sus email y password
             
-            //enviarCorreo(email,password)
+            enviarCorreo(email,password)
             
             
             //crea prestador con los datos ingresados

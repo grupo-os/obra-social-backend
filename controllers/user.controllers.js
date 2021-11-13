@@ -1,6 +1,7 @@
 const ctrlUsuarios = {};
-const Usuario = require('../models/users');
 
+const Usuario = require('../models/users');
+const bcryptjs = require('bcryptjs');
 
 //ruta mostrar usuarios 
 ctrlUsuarios.rutaLogin = async (req,res)=>{
@@ -21,6 +22,15 @@ ctrlUsuarios.rutaLogin = async (req,res)=>{
             email: email
         })
     }
+
+    //verificar contrasenia
+
+    const passwordTrue = bcryptjs.compareSync(password,user.password)
+
+    if(!passwordTrue){
+        return res.status(401).json({msg:'contrasena invalida'})
+    }
+    res.json({msg:'inicio de session exitoso'})
 }
 
 
