@@ -10,8 +10,8 @@ const enviarCorreo = async (email,password)=> {
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-      user: 'jorhe123.jg@gmail.com', // generated ethereal user
-      pass: 'oxtrbbjbpnfxlycz', // generated ethereal password
+      user: process.env.MYGMAIL, // generated ethereal user
+      pass: process.env.MYGMAIL, // generated ethereal password
     },
   });
   contentHTML=`

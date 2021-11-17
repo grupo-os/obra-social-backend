@@ -120,6 +120,11 @@ ctrlSolicitudes.rutaAceptarPrestador = async (req,res)=>{
 
             const password = createPassword(); //funcion para crear password
             const salt = bcryptjs.genSaltSync();
+
+            //envia correo con sus email y password
+            enviarCorreo(email,password)
+
+
             const passwordHash = bcryptjs.hashSync(password,salt)
             //crea usuario automaticamente con el correo y la contrasena generada automaticamente
             let user = new Usuario({email,passwordHash, role:'prestador',tipoRole:'user'});
@@ -137,10 +142,6 @@ ctrlSolicitudes.rutaAceptarPrestador = async (req,res)=>{
             }
             await user.save()
             
-            
-            //envia correo con sus email y password
-            
-            enviarCorreo(email,password)
             
             
             //crea prestador con los datos ingresados
