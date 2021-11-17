@@ -53,11 +53,16 @@ ctrlSolicitudes.rutaPostPrestador = async (req,res)=>{
 ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
 
     const {id} = req.params;
-
-    const solicitudAceptada = await SolicitudAfiliado.findByIdAndUpdate(id, {
+    let solicitudAceptada= {};
+    try{
+    solicitudAceptada = await SolicitudAfiliado.findByIdAndUpdate(id, {
         estado: 'aceptado'
     });
-
+}catch (error){
+    console.log("ERROR AL:",error);
+    res.json({msg: 'error al actualizar soli',
+            err:error})
+}
     const {nombre,email,dni,celular,direccion} = solicitudAceptada;
 
 
@@ -78,6 +83,7 @@ ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
     });
 
     //Si es aceptado se crea una persona con la informacion
+  try{
     const persona = await Personas.findOne({
         dni
     })
@@ -103,6 +109,13 @@ ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
             usuario: user
         }))
 
+  }
+  catch(error){
+    console.log('error al crear persona: ',error);
+    res.json('error al crear persona');
+
+    
+  }
 }
 
 
