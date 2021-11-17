@@ -41,7 +41,7 @@ router.post('/afiliado/enviar-solicitudes',rutaPostAfiliado)
 
 
 //Si usuario es aceptado
-router.put('/afiliado/solicitud-aceptada/:id',rutaAceptarAfiliado)
+router.put('/afiliado/solicitud/:id',rutaAceptarAfiliado)
 
 
 
