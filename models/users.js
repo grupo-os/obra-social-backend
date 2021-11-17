@@ -1,6 +1,7 @@
 const {model, Schema}= require('mongoose');
 const {} = require('./personas');
 const UserShema = new Schema({
+    idPersona:{type:Schema.Types.ObjectId,ref:'Personas'},
     email:{
         type: String,
         require:true

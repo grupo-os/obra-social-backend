@@ -49,41 +49,60 @@ ctrlSolicitudes.rutaPostPrestador = async (req,res)=>{
 
 //RUTA PUT para editar LOS ESTADOS DE LAS SOLICITUDES
 
-ctrlSolicitudes.rutaAceptarAfiliado= async (req,res)=>{
+
+ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
 
     const {id} = req.params;
 
-    const solicitudAceptada = await SolicitudAfiliado.findByIdAndUpdate(id,{estado:'aceptado'});
+    const solicitudAceptada = await SolicitudAfiliado.findByIdAndUpdate(id, {
+        estado: 'aceptado'
+    });
 
-    const {nombre, email, dni, celular, direccion}= solicitudAceptada
-            //Si es aceptado se crea una persona con la informacion
-            const persona = new Personas({nombre,email,dni,celular,direccion})
-            await persona.save() 
+    const {nombre,email,dni,celular,direccion} = solicitudAceptada;
 
-            //se crea el usuario automaticamente
 
-            const password = createPassword(); //funcion para crear password
+    //se crea el usuario automaticamente
 
-            const salt = bcryptjs.genSaltSync();
-            
-            const passwordHash = bcryptjs.hashSync(password, salt)
+    const password = createPassword(); //funcion para crear password
 
-            let user = new Usuario({email,passwordHash, role:'afiliado',tipoRole:'user'});
-           
-            await user.save()
-            
-            //envia correo con sus email y password
-            
-            await enviarCorreo(email,password)
+    const salt = bcryptjs.genSaltSync();
 
-            
-            
-            return (    
-            res.status(201).json({
-                
-                personaCreada:persona,
-                usuario:user
-            }))
+    const passwordHash = bcryptjs.hashSync(password, salt)
+
+    let user = new Usuario({email,passwordHash,role: 'afiliado', tipoRole: 'user'
+    });
+
+    //Si es aceptado se crea una persona con la informacion
+    const persona = await Personas.findOne({
+        dni
+    })
+
+    if (!persona) {
+        const newPerson = new Personas({nombre,email,dni,celular,direccion})
+
+        await newPerson.save();
+
+        user.idPersona = newPerson._id;
+        mostrarPersona = newPerson;
+    } else {
+        user.idPersona = persona._id;
+        mostrarPersona = persona;
+    }
+
+    await user.save()
+
+    //envia correo con sus email y password
+
+    await enviarCorreo(email, password)
+
+
+
+    return (
+        res.status(201).json({
+
+            personaCreada: mostrarPersona,
+            usuario: user
+        }))
 
 }
 
@@ -99,17 +118,26 @@ ctrlSolicitudes.rutaAceptarPrestador = async (req,res)=>{
 
     const {nombre, email, dni, celular, direccion,}= solicitudAceptada
             
-            //Si es aceptado se crea una persona con la informacion
-            const persona = new Personas({nombre,email,dni,celular,direccion})
-            await persona.save() 
 
             //se crea el usuario automaticamente
 
             const password = createPassword(); //funcion para crear password
-            
+            const salt = bcryptjs.genSaltSync();
+            const passwordHash = bcryptjs.hashSync(password,salt)
             //crea usuario automaticamente con el correo y la contrasena generada automaticamente
-            let user = new Usuario({email,password, role:'prestador',tipoRole:'user'});
+            let user = new Usuario({email,passwordHash, role:'prestador',tipoRole:'user'});
             
+            const persona= await Personas.findOne({dni})
+
+            if(!persona){
+                const newPerson = new Personas({nombre,email,dni,celular,direccion})
+
+            await newPerson.save();
+
+            user.idPersona = newPerson._id;
+            } else {
+            user.idPersona = persona._id;
+            }
             await user.save()
             
             

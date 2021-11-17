@@ -2,6 +2,7 @@ const {model, Schema}= require('mongoose');
 
 
 const PersonaShema = new Schema({
+    
     nombre:{
         type: String,
         require:true
