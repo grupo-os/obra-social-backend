@@ -64,7 +64,10 @@ ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
     //se crea el usuario automaticamente
 
     const password = createPassword(); //funcion para crear password
-
+    
+    //envia correo con sus email y password
+    await enviarCorreo(email, password)
+    
     const salt = bcryptjs.genSaltSync();
 
     const passwordHash = bcryptjs.hashSync(password, salt)
@@ -90,12 +93,6 @@ ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
     }
 
     await user.save()
-
-    //envia correo con sus email y password
-
-    await enviarCorreo(email, password)
-
-
 
     return (
         res.status(201).json({
