@@ -66,7 +66,9 @@ ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
     const password = createPassword(); //funcion para crear password
     
     //envia correo con sus email y password
-    await enviarCorreo(email, password)
+
+
+    //await enviarCorreo(email, password)
     
     const salt = bcryptjs.genSaltSync();
 
@@ -122,7 +124,9 @@ ctrlSolicitudes.rutaAceptarPrestador = async (req,res)=>{
             const salt = bcryptjs.genSaltSync();
 
             //envia correo con sus email y password
-            enviarCorreo(email,password)
+
+
+            //enviarCorreo(email,password)
 
 
             const passwordHash = bcryptjs.hashSync(password,salt)

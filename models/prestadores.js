@@ -16,36 +16,10 @@ const PrestadorShema = new Schema({
         type: String,
         require:true
     },
-    hola:{
-        type: String,
-        require:true
-    },
-    hola:{
-        type: String,
-        require:true
-    },
-    hola:{
-        type: String,
-        require:true
-    },
-    hola:{
-        type: String,
-        require:true
-    },
-    hola:{
-        type: String,
-        require:true
-    },
-    hola:{
-        type: String,
-        require:true
-    },
-    hola:{
+    fecha_nacimiento:{
         type: String,
         require:true
     }
-
-    
 });
 
 module.exports = model('Prestador', PrestadorShema);
