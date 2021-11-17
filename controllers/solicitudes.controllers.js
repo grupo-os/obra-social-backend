@@ -52,7 +52,7 @@ ctrlSolicitudes.rutaPostPrestador = async (req,res)=>{
 
 ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
 
-    const {id} = req.body;
+    const {id} = req.params;
     let solicitudAceptada= {};
     try{
     solicitudAceptada = await SolicitudAfiliado.findByIdAndUpdate(id, {
