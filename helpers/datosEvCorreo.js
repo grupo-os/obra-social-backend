@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const enviarCorreo = async (email,password)=> {
 
+  console.log(typeof process.env.MYGMAIL)
   
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -11,7 +12,7 @@ const enviarCorreo = async (email,password)=> {
     secure: true, // true for 465, false for other ports
     auth: {
       user: process.env.MYGMAIL, // generated ethereal user
-      pass: process.env.MYGMAIL, // generated ethereal password
+      pass: process.env.PGMAIL // generated ethereal password
     },
   });
   contentHTML=`
