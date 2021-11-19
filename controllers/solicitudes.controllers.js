@@ -1,69 +1,47 @@
 const ctrlSolicitudes = {};
-const SolicitudAfiliado = require('../models/solicitudAfiliado');
-const SolicitudPrestador= require('../models/solicitudPrestador');
-const Personas = require('../models/personas');
+const SolicitudFarmacia = require('../models/solicitudFarmacia');
+const Farmacia = require('../models/farmacias');
 const Usuario = require('../models/users');
 const bcryptjs = require('bcryptjs');
 const {createPassword} = require('../helpers/generatepassword');
 const {enviarCorreo} = require('../helpers/datosEvCorreo') 
 //RUTAS GET:
 //get afiliados
-ctrlSolicitudes.rutaGetAfiliado = async (req,res)=>{
+ctrlSolicitudes.rutaGetFarmacia = async (req,res)=>{
 
-    const soliAfiliado = await SolicitudAfiliado.find()
+    const soliFarmacia = await SolicitudFarmacia.find()
 
-    res.json(soliAfiliado);
+    res.json(soliFarmacia);
 }
-//get prestadores
-ctrlSolicitudes.rutaGetPrestador = async (req,res)=>{
 
-    const soliPrestador = await SolicitudPrestador.find()
-
-    res.json(soliPrestador);
-}
 
 //RUTAS POST 
 //agregar solicitud afiliados
 
-
-ctrlSolicitudes.rutaPostAfiliado = async (req,res)=>{
+ctrlSolicitudes.rutaPostFarmacia = async (req,res)=>{
      
-    const {nombre,email,dni,celular,direccion} = req.body;
+    const {nombreFarmacia,email,CUIL,celular,direccion} = req.body;
 
-    const soliAfiliado = new SolicitudAfiliado({nombre,email,dni,celular,direccion})
+    const soliFarmacia = new SolicitudFarmacia({nombreFarmacia,email,CUIL,celular,direccion})
 
-    await soliAfiliado.save();
+    await soliFarmacia.save();
     res.json({msg: 'nueva Persona agregada'})
 };
 
-//agregar solicitud prestadores
-ctrlSolicitudes.rutaPostPrestador = async (req,res)=>{
-     
-    const {nombre,email,dni,celular,direccion, profecion,especialidad} = req.body;
-
-    const soliPrestador = new SolicitudPrestador({nombre,email,dni,celular,direccion, profecion,especialidad})
-
-    await soliPrestador.save();
-    res.json({msg: 'nueva Persona agregada'})
-};
 
 //RUTA PUT para editar LOS ESTADOS DE LAS SOLICITUDES
 
 
-ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
+ctrlSolicitudes.rutaAceptarFarmacia = async (req, res) => {
 
     const {id} = req.params;
     let solicitudAceptada= {};
-    try{
-    solicitudAceptada = await SolicitudAfiliado.findByIdAndUpdate(id, {
+   
+    solicitudAceptada = await SolicitudFarmacia.findByIdAndUpdate(id, {
         estado: 'aceptado'
     });
-}catch (error){
-    console.log("ERROR AL:",error);
-    res.json({msg: 'error al actualizar soli',
-            err:error})
-}
-    const {nombre,email,dni,celular,direccion} = solicitudAceptada;
+
+    const {nombreFarmacia,email,CUIL,celular,direccion} = solicitudAceptada;
 
 
     //se crea el usuario automaticamente
@@ -73,130 +51,48 @@ ctrlSolicitudes.rutaAceptarAfiliado = async (req, res) => {
     //envia correo con sus email y password
 
 
-    //await enviarCorreo(email, password)
+    await enviarCorreo(email, password)
     
     const salt = bcryptjs.genSaltSync();
 
     const passwordHash = bcryptjs.hashSync(password, salt)
 
-    let user = new Usuario({email,passwordHash,role: 'afiliado', tipoRole: 'user'
+    let user = new Usuario({email,passwordHash,role: 'farmacia', tipoRole: 'user'
     });
 
     //Si es aceptado se crea una persona con la informacion
-  try{
-    const persona = await Personas.findOne({
-        dni
+
+    const farmacia = await Farmacia.findOne({
+        CUIL
     })
 
-    if (!persona) {
-        const newPerson = new Personas({nombre,email,dni,celular,direccion})
+    if (!farmacia) {
+        const newFarm = new Farmacia({nombreFarmacia,email,CUIL,celular,direccion})
 
-        await newPerson.save();
-
-        user.idPersona = newPerson._id;
-        mostrarPersona = newPerson;
-    } else {
-        user.idPersona = persona._id;
-        mostrarPersona = persona;
+        await newFarm.save();
     }
-
+//farmacia
     await user.save()
 
     return (
         res.status(201).json({
 
-            personaCreada: mostrarPersona,
+            farmaciaCreada: newFarm,
             usuario: user
         }))
-
-  }
-  catch(error){
-    console.log('error al crear persona: ',error);
-    res.json('error al crear persona');
-
-    
-  }
-}
-
-
-
-//ruta editar estado de la solicitud de Prestador
-
-ctrlSolicitudes.rutaAceptarPrestador = async (req,res)=>{
-
-    const {id} = req.params;
-
-    const solicitudAceptada = await SolicitudPrestador.findByIdAndUpdate(id,{estado:'aceptado'});
-
-    const {nombre, email, dni, celular, direccion,}= solicitudAceptada
-            
-
-            //se crea el usuario automaticamente
-
-            const password = createPassword(); //funcion para crear password
-            const salt = bcryptjs.genSaltSync();
-
-            //envia correo con sus email y password
-
-
-            //enviarCorreo(email,password)
-
-
-            const passwordHash = bcryptjs.hashSync(password,salt)
-            //crea usuario automaticamente con el correo y la contrasena generada automaticamente
-            let user = new Usuario({email,passwordHash, role:'prestador',tipoRole:'user'});
-            
-            const persona= await Personas.findOne({dni})
-
-            if(!persona){
-                const newPerson = new Personas({nombre,email,dni,celular,direccion})
-
-            await newPerson.save();
-
-            user.idPersona = newPerson._id;
-            } else {
-            user.idPersona = persona._id;
-            }
-            await user.save()
-            
-            
-            
-            //crea prestador con los datos ingresados
-            
-
-            return res.status(201).json({
-                personaCreada:persona,
-                usuario:user
-            })
 
 }
 
 //rechaza afiliado
-ctrlSolicitudes.rutaRechazarAfiliado= async (req,res)=>{
+ctrlSolicitudes.rutaRechazarFarmacia= async (req,res)=>{
 
     const {id} = req.params;
 
-    const soliRechazada = await SolicitudAfiliado.findByIdAndUpdate(id,{estado:'rechazado'});
+    const soliRechazada = await SolicitudFarmacia.findByIdAndUpdate(id,{estado:'rechazado'});
 
     
     return res.status(201).json({
-        msg: "usuario rechazado", soliRechazada
-    })
-               
-        
-}
-
-//rechaza prestador
-
-ctrlSolicitudes.rutaRechazarPrestador= async (req,res)=>{
-
-    const {id} = req.params;
-
-    const soliRechazada = await SolicitudPrestador.findByIdAndUpdate(id,{estado:'rechazado'});
-
-    
-    return res.status(201).json({
-        msg: "usuario rechazado", soliRechazada
+        msg: "Farmacia rechazada", soliRechazada
     })
                
         

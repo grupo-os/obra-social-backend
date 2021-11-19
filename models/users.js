@@ -1,12 +1,11 @@
 const {model, Schema}= require('mongoose');
 const {} = require('./personas');
 const UserShema = new Schema({
-    idPersona:{type:Schema.Types.ObjectId,ref:'Personas'},
     email:{
         type: String,
         require:true
     },
-    password:{
+    passwordHash:{
         type: String,
         require:true
     },
@@ -15,11 +14,6 @@ const UserShema = new Schema({
         default: true
     },
     role:{
-        type: String,
-        require:true
-
-    },
-    tipoRole:{
         type: String,
         require:true
     }

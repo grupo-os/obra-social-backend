@@ -24,11 +24,6 @@ const PersonaShema = new Schema({
         type: String,
         require:true
             
-    },
-    estado:{
-        type:String,
-        default: 'pendiente',
-        require: true,
     }
 });
 module.exports = model('Personas', PersonaShema);

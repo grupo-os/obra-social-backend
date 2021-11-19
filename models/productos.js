@@ -27,7 +27,7 @@ const ProductosShema = new Schema({
     descuento:{
             type: Number,
             require:true
-        },
+    },
     stock:{
         type: Number,
         require:true
